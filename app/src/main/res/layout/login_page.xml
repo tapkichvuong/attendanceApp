@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgAppIcon"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:src="@drawable/ic_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtUserCode"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:cursorVisible="true"
+        android:fontFamily="@font/font_medium"
+        android:hint="User code"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:inputType="textCapSentences"
+        android:maxLength="50"
+        android:layout_marginTop="@dimen/_30sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgAppIcon"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        android:paddingStart="@dimen/_10sdp"
+        android:background="@drawable/background_input_edit_text"
+        android:theme="@style/MyEditText" />
+
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:cursorVisible="true"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:fontFamily="@font/font_medium"
+        android:hint="Password"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:inputType="textCapSentences"
+        android:maxLength="50"
+        android:paddingStart="@dimen/_10sdp"
+        android:background="@drawable/background_input_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtUserCode"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        android:theme="@style/MyEditText" />
+
+    <TextView
+        android:id="@+id/btnLogin"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:background="@drawable/bg_gradient_app"
+        android:fontFamily="@font/font_medium"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtPassword"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
