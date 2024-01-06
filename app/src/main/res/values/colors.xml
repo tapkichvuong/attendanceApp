@@ -11,6 +11,9 @@
     <color name="background_color">#F5F5F5</color>
     <color name="text_color">#000000</color>
     <color name="color_theme_app">@color/color_gradient_start</color>
-    <color name="color_gradient_start">#F94B65</color>
-    <color name="color_gradient_end">#F31A3B</color>
+    <color name="color_gradient_start">#A354F8</color>
+    <color name="color_gradient_end">#B978FF</color>
+    <color name="color_background_app">#FAFAFA</color>
+    <color name="color_text_main">#424242</color>
+    <color name="color_text_sub">#ACA9A9</color>
 </resources>

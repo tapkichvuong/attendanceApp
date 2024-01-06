@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_gradient_app"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/llInfo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_80sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_18ssp"
+            android:text="Hi, 20155398"
+            android:fontFamily="@font/font_bold"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/white"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/ivPro"
+            android:layout_width="@dimen/_52sdp"
+            android:layout_height="@dimen/_33sdp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:visibility="visible"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/pro_label"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llCourse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_list_course"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:text="Course List"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            android:fontFamily="@font/font_medium" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCourse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_background_app"
+            android:overScrollMode="never"
+            android:paddingHorizontal="@dimen/_1sdp"
+            android:visibility="visible"
+            android:layout_marginTop="@dimen/_16sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_course" />
+    </LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

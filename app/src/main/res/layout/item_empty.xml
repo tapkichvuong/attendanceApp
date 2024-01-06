@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_90sdp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/font_bold"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:textColor="@color/color_text_main"
+        android:textSize="@dimen/_14ssp"
+        tools:text="No active course" />
+</FrameLayout>

@@ -14,6 +14,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_bold"
+        app:layout_constraintTop_toBottomOf="@id/imgAppIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="ATTENDANCE MANAGEMENT\nSYSTEM"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:textColor="@color/color_gradient_start"
+        android:textSize="@dimen/_16ssp"
+        android:gravity="center" />
+
     <EditText
         android:id="@+id/edtUserCode"
         android:layout_width="match_parent"
@@ -27,14 +42,14 @@
         android:layout_marginTop="@dimen/_30sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgAppIcon"
+        app:layout_constraintTop_toBottomOf="@id/title"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="@dimen/_14ssp"
         android:paddingStart="@dimen/_10sdp"
-        android:background="@drawable/background_input_edit_text"
+        android:background="@drawable/bg_input_edit_text"
         android:theme="@style/MyEditText" />
 
     <EditText
@@ -49,7 +64,7 @@
         android:inputType="textCapSentences"
         android:maxLength="50"
         android:paddingStart="@dimen/_10sdp"
-        android:background="@drawable/background_input_edit_text"
+        android:background="@drawable/bg_input_edit_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtUserCode"
@@ -65,8 +80,8 @@
         android:layout_width="@dimen/_80sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:background="@drawable/bg_gradient_app"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/bg_button_gradient"
         android:fontFamily="@font/font_medium"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,5 +94,21 @@
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_medium"
+        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:visibility="invisible"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:textColor="@color/color_gradient_start"
+        android:textSize="@dimen/_12ssp"
+        android:gravity="center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

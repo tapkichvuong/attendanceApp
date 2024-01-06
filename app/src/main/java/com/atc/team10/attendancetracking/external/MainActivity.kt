@@ -3,7 +3,8 @@ package com.atc.team10.attendancetracking.external
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.atc.team10.attendancetracking.R
-import com.atc.team10.attendancetracking.external.page.LoginPage
+import com.atc.team10.attendancetracking.external.ui.page.LoginPage
+import com.atc.team10.attendancetracking.external.ui.page.PageFragment
 import com.atc.team10.attendancetracking.utils.AppExt.getTopFragment
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.PageUtils
@@ -23,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         var currentPage = getTopFragment()
         if (currentPage is LoginPage) {
             finish()
-        } else {
-
+        } else if (currentPage !is PageFragment || currentPage.onBackPressed()) {
+            finish()
         }
         // if is Teacher or Student fragment -> back to exist or show dialog
 

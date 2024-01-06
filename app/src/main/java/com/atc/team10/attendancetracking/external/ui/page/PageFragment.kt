@@ -1,4 +1,4 @@
-package com.atc.team10.attendancetracking.external.page
+package com.atc.team10.attendancetracking.external.ui.page
 
 import android.os.Bundle
 import android.view.LayoutInflater
