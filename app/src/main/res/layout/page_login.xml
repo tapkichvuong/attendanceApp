@@ -61,19 +61,31 @@
         android:fontFamily="@font/font_medium"
         android:hint="Password"
         android:layout_marginHorizontal="@dimen/_30sdp"
-        android:inputType="textCapSentences"
-        android:maxLength="50"
+        android:maxLength="30"
         android:paddingStart="@dimen/_10sdp"
+        android:paddingEnd="@dimen/_40sdp"
         android:background="@drawable/bg_input_edit_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtUserCode"
         android:scrollHorizontally="true"
         android:singleLine="true"
+        android:maxLines="1"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="@dimen/_14ssp"
+        android:inputType="textPassword"
         android:theme="@style/MyEditText" />
+
+    <ImageView
+        android:id="@+id/ivTogglePassword"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/ic_hide_password"
+        app:layout_constraintTop_toTopOf="@id/edtPassword"
+        app:layout_constraintBottom_toBottomOf="@id/edtPassword"
+        app:layout_constraintEnd_toEndOf="@id/edtPassword"
+        android:layout_marginEnd="@dimen/_10sdp" />
 
     <TextView
         android:id="@+id/btnLogin"

@@ -15,5 +15,7 @@
     <color name="color_gradient_end">#B978FF</color>
     <color name="color_background_app">#FAFAFA</color>
     <color name="color_text_main">#424242</color>
-    <color name="color_text_sub">#ACA9A9</color>
+    <color name="color_text_sub">#7C7C7C</color>
+
+    <color name="button_detail">#F5CF04</color>
 </resources>

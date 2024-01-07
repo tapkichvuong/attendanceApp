@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/cameraView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/btnCapture"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@id/cameraView"
+            android:background="@drawable/bg_order_student"
+            android:src="@android:drawable/ic_menu_camera" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/btnAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/bg_button_gradient"
+        android:fontFamily="@font/font_medium"
+        android:gravity="center"
+        android:layout_above="@id/tvGuide"
+        android:layout_centerHorizontal="true"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="Attendance"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvGuide"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="@font/font_medium"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="Take a picture to attend your course"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -6,7 +6,6 @@ import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.external.ui.page.LoginPage
 import com.atc.team10.attendancetracking.external.ui.page.PageFragment
 import com.atc.team10.attendancetracking.utils.AppExt.getTopFragment
-import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.PageUtils
 
 class MainActivity : AppCompatActivity() {
@@ -14,17 +13,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
-        setupOnBackPressedCallback {
-            handleBackPressed()
-        }
+//        setupOnBackPressedCallback {
+//            handleBackPressed()
+//        }
         loadLoginPage()
     }
 
     private fun handleBackPressed() {
         var currentPage = getTopFragment()
-        if (currentPage is LoginPage) {
-            finish()
-        } else if (currentPage !is PageFragment || currentPage.onBackPressed()) {
+        if (currentPage is LoginPage || currentPage !is PageFragment) {
             finish()
         }
         // if is Teacher or Student fragment -> back to exist or show dialog

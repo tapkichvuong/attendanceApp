@@ -4,5 +4,6 @@ object AppConstant {
     object BundleKey {
         const val USER_CODE = "user_code"
         const val USER_ROLE = "user_role"
+        const val SESSION_ID = "session_id"
     }
 }

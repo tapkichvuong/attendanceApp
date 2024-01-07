@@ -1,6 +1,8 @@
 package com.atc.team10.attendancetracking.external.ui.page
 
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.core.util.Pair
@@ -14,6 +16,7 @@ import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.invisible
 import com.atc.team10.attendancetracking.utils.AppExt.onClick
+import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.visible
 import com.atc.team10.attendancetracking.utils.PageUtils
 
@@ -28,6 +31,16 @@ class LoginPage: PageFragment() {
         binding = PageLoginBinding.bind(rootView)
         val scaleAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_anim)
         binding.imgAppIcon.startAnimation(scaleAnimation)
+        binding.root.onClickSafely {}
+        binding.ivTogglePassword.onClick {
+            if (binding.edtPassword.transformationMethod is PasswordTransformationMethod) {
+                binding.edtPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                binding.ivTogglePassword.setImageResource(R.drawable.ic_show_password)
+            } else {
+                binding.edtPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                binding.ivTogglePassword.setImageResource(R.drawable.ic_hide_password)
+            }
+        }
         binding.btnLogin.onClick {
                 val userCode = binding.edtUserCode.text.toString()
                 val password = binding.edtPassword.text.toString()

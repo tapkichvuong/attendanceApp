@@ -1,74 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_gradient_app"
-    android:orientation="vertical">
+    android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/llInfo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_80sdp">
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/_18ssp"
-            android:text="Hi, 20155398"
-            android:fontFamily="@font/font_bold"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/lessonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="@font/font_bold"
+        android:gravity="start"
+        android:text="Mathematics"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_18ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivBack" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/ivPro"
-            android:layout_width="@dimen/_52sdp"
-            android:layout_height="@dimen/_33sdp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:visibility="visible"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/pro_label"
-            tools:visibility="visible" />
+    <include
+        android:id="@+id/countStudent"
+        layout="@layout/item_course_detail_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintEnd_toStartOf="@id/subjectCode"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lessonName" />
 
-    </RelativeLayout>
+    <include
+        android:id="@+id/subjectCode"
+        layout="@layout/item_course_detail_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/countStudent"
+        app:layout_constraintTop_toBottomOf="@id/lessonName" />
 
-    <LinearLayout
-        android:id="@+id/llCourse"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_list_course"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/btnAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/bg_button_course_detail"
+        android:fontFamily="@font/font_medium"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnHistory"
+        app:layout_constraintTop_toBottomOf="@id/countStudent"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="Attendance"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_13ssp" />
 
-        <TextView
+    <TextView
+        android:id="@+id/btnHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:background="@drawable/bg_button_course_detail"
+        android:fontFamily="@font/font_medium"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/btnAttendance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subjectCode"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="History"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_13ssp" />
+
+
+        <LinearLayout
+            android:id="@+id/llCourse"
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:text="Course List"
-            android:gravity="start"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_16ssp"
-            android:textStyle="bold"
-            android:fontFamily="@font/font_medium" />
+            app:layout_constraintTop_toBottomOf="@id/btnAttendance"
+            android:background="@drawable/bg_list_course"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCourse"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_background_app"
-            android:overScrollMode="never"
-            android:paddingHorizontal="@dimen/_1sdp"
-            android:visibility="visible"
-            android:layout_marginTop="@dimen/_16sdp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_course" />
-    </LinearLayout>
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:text="Student List"
+                android:gravity="start"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                android:fontFamily="@font/font_medium" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCourse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_background_app"
+                android:overScrollMode="never"
+                android:paddingHorizontal="@dimen/_1sdp"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/_16sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_student" />
+        </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

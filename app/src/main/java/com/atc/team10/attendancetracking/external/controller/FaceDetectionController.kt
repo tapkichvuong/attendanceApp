@@ -1,47 +1,46 @@
 package com.atc.team10.attendancetracking.external.controller
 
-import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.atc.team10.attendancetracking.data.model.request.LoginRequest
 import com.atc.team10.attendancetracking.data.remote.ApiHelper
-import com.atc.team10.attendancetracking.utils.AppExt.sendLog
+import com.atc.team10.attendancetracking.utils.AppExt
 import com.atc.team10.attendancetracking.utils.AppExt.updateValue
-import com.atc.team10.attendancetracking.utils.AppUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
-class LoginController : AbsController() {
+class FaceDetectionController : AbsController() {
+    var sessionId: Long = -1L
+    var imageFile: MutableLiveData<File?> = MutableLiveData(null)
     var isLoading = MutableLiveData(false)
-    var notifyError = MutableLiveData("")
-    var loginResult = MutableLiveData<Pair<String, String>>()
+    var isJoined = MutableLiveData(false)
 
-    fun login(loginRequest: LoginRequest) {
+    fun joinSession() {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ApiHelper.apiService.login(loginRequest)
+                val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), imageFile.value!!)
+                val imageBody = MultipartBody.Part.createFormData("image", imageFile.value!!.name, requestFile)
+                val response = ApiHelper.apiService.joinSession(sessionId, imageBody)
                 if (response.isSuccessful) {
-                    val userResponse = response.body()
-                    val decodeJwt = AppUtils.decodeJwtToken(userResponse!!.token)
+                    val hasJoined = response.body()
                     withContext(Dispatchers.Main) {
                         isLoading.updateValue(false)
-                        notifyError.updateValue("")
-                        loginResult.updateValue(decodeJwt)
+                        isJoined.updateValue(hasJoined)
                     }
                 } else {
                     val message = response.message()
                     withContext(Dispatchers.Main) {
-                        notifyError.updateValue(message)
-                        /** for test */
-//                        isLoading.updateValue(false)
-//                        notifyError.updateValue("")
-//                        loginResult.updateValue(Pair("20155398", "student"))
+                        isLoading.updateValue(false)
+                        isJoined.updateValue(false)
                     }
                 }
             } catch (e: Exception) {
-                sendLog("login message ${e.message}")
+                AppExt.sendLog("join session message ${e.message}")
             } finally {
                 withContext(Dispatchers.Main) {
                     isLoading.updateValue(false)

@@ -8,10 +8,11 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 
 object AppExt {
-    fun AppCompatActivity.getTopFragment(): Fragment? {
+    fun FragmentActivity.getTopFragment(): Fragment? {
         val size = supportFragmentManager.fragments.size
         if (size > 0) {
             return supportFragmentManager.fragments[size - 1]
@@ -19,7 +20,24 @@ object AppExt {
         return null
     }
 
+    fun FragmentActivity.getPreviousFragment(): Fragment? {
+        val size = supportFragmentManager.fragments.size
+        if (size > 1) {
+            return supportFragmentManager.fragments[size - 2]
+        }
+        return null
+    }
+
     fun AppCompatActivity.setupOnBackPressedCallback(onBackPressedAction: () -> Unit) {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressedAction.invoke()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    fun FragmentActivity.setupOnBackPressedCallback(onBackPressedAction: () -> Unit) {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBackPressedAction.invoke()
