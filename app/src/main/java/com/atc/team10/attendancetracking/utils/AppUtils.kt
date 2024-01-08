@@ -2,19 +2,14 @@ package com.atc.team10.attendancetracking.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.widget.Toast
 import androidx.core.util.Pair
+import com.atc.team10.attendancetracking.utils.AppExt.showShortToast
 import com.google.gson.Gson
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
 object AppUtils {
-    fun isConnectionAvailable(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = connectivityManager.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
-    }
-
     fun decodeJwtToken(jwt: String): Pair<String, String> {
         val tokens = jwt.split(".")
         val payload = decodeBase64(tokens[1])

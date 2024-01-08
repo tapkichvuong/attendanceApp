@@ -15,7 +15,7 @@ import java.io.File
 
 class FaceDetectionController : AbsController() {
     var sessionId: Long = -1L
-    var imageFile: MutableLiveData<File?> = MutableLiveData(null)
+    var imageFile: File? = null
     var isLoading = MutableLiveData(false)
     var isJoined = MutableLiveData(false)
 
@@ -23,8 +23,8 @@ class FaceDetectionController : AbsController() {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), imageFile.value!!)
-                val imageBody = MultipartBody.Part.createFormData("image", imageFile.value!!.name, requestFile)
+                val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), imageFile!!)
+                val imageBody = MultipartBody.Part.createFormData("image", imageFile!!.name, requestFile)
                 val response = ApiHelper.apiService.joinSession(sessionId, imageBody)
                 if (response.isSuccessful) {
                     val hasJoined = response.body()

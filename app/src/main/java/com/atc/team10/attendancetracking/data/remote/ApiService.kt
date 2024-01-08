@@ -20,11 +20,11 @@ interface ApiService {
     @POST("auth/authenticate")
     suspend fun login(@Body body: LoginRequest): Response<LoginResponse>
 
-    @GET("api/v1/student/sessions")
+    @GET("student/sessions")
     suspend fun getStudentSessions(): Response<List<SessionResponse>>
 
     @Multipart
-    @POST("api/v1/student")
+    @POST("student")
     suspend fun joinSession(@Part("sessionId") sessionId: Long, @Part imageFile: MultipartBody.Part): Response<Boolean>
 
     suspend fun getTeacherSessions(): Response<List<SessionResponse>>

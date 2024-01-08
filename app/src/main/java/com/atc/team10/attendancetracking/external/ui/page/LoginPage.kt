@@ -15,10 +15,12 @@ import com.atc.team10.attendancetracking.external.ui.dialog.LoadingDialog
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.invisible
+import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
 import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.visible
 import com.atc.team10.attendancetracking.utils.PageUtils
+import com.atc.team10.attendancetracking.utils.PrefUtils
 
 class LoginPage: PageFragment() {
     override val controller by viewModels<LoginController>()
@@ -29,6 +31,11 @@ class LoginPage: PageFragment() {
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageLoginBinding.bind(rootView)
+        bindView()
+        observeLogin()
+    }
+
+    private fun bindView() {
         val scaleAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_anim)
         binding.imgAppIcon.startAnimation(scaleAnimation)
         binding.root.onClickSafely {}
@@ -41,13 +48,28 @@ class LoginPage: PageFragment() {
                 binding.ivTogglePassword.setImageResource(R.drawable.ic_hide_password)
             }
         }
-        binding.btnLogin.onClick {
-                val userCode = binding.edtUserCode.text.toString()
-                val password = binding.edtPassword.text.toString()
-                val loginRequest = LoginRequest(userCode, password)
-                controller.login(loginRequest)
+        val isRememberPassword = PrefUtils.rememberPassword
+        binding.cbRememberPassword.isChecked = isRememberPassword
+        if (isRememberPassword) {
+            binding.edtUserCode.setText(PrefUtils.userCode)
+            binding.edtPassword.setText(PrefUtils.userPassword)
         }
-        observeLogin()
+        binding.cbRememberPassword.setOnCheckedChangeListener { _, isChecked ->
+            PrefUtils.rememberPassword = isChecked
+        }
+        binding.btnLogin.onClick {
+            val userCode = binding.edtUserCode.text.toString()
+            val password = binding.edtPassword.text.toString()
+            val loginRequest = LoginRequest(userCode, password)
+            if (binding.cbRememberPassword.isChecked && userCode.isNotBlank() && password.isNotBlank()) {
+                PrefUtils.rememberPassword = true
+                PrefUtils.userCode = userCode
+                PrefUtils.userPassword = password
+            }
+            if (requireContext().isConnectionAvailable()) {
+                controller.login(loginRequest)
+            }
+        }
     }
 
     private fun observeLogin() {

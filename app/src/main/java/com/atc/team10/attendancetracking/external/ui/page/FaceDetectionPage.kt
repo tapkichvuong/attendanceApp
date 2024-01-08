@@ -43,13 +43,10 @@ class FaceDetectionPage : PageFragment() {
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageFaceDetectionBinding.bind(rootView)
         controller.sessionId = arguments?.getLong(SESSION_ID) ?: -1L
-        binding.btnCapture.disable()
+        binding.btnAttendance.disable()
         binding.root.onClickSafely {}
-        binding.btnCapture.onClick {
-            takePicture()
-        }
         binding.btnAttendance.onClick {
-            controller.joinSession()
+            takePicture()
         }
         requireActivity().setupOnBackPressedCallback {
             val currentPage = requireActivity().getPreviousFragment()
@@ -62,13 +59,6 @@ class FaceDetectionPage : PageFragment() {
     }
 
     private fun initObserver() {
-        controller.imageFile.observe(viewLifecycleOwner) {
-            if (it == null) {
-                binding.btnAttendance.disable()
-            } else {
-                binding.btnAttendance.enable()
-            }
-        }
         controller.isLoading.observe(viewLifecycleOwner) {
             showDialogLoading(it)
         }
@@ -81,7 +71,7 @@ class FaceDetectionPage : PageFragment() {
         super.onViewCreated(view, savedInstanceState)
         startCamera()
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.take_picture)
-        binding.btnCapture.enable()
+        binding.btnAttendance.enable()
     }
 
     private fun startCamera() {
@@ -130,8 +120,9 @@ class FaceDetectionPage : PageFragment() {
                     // Image capture successful, handle the saved image
                     // You can display the captured image or perform further actions here
                     playShutterSound()
-                    Toast.makeText(requireContext(), "Picture saved", Toast.LENGTH_SHORT).show()
-                    controller.imageFile.value = photoFile
+                    sendLog("face detection - picture saved")
+                    controller.imageFile = photoFile
+                    controller.joinSession()
                     sendLog("face detection size: ${photoFile.length()}")
                 }
 

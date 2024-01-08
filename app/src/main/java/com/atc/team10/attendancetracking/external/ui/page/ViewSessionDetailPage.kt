@@ -17,7 +17,7 @@ class ViewSessionDetailPage : PageFragment() {
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageViewSessionDetailBinding.bind(rootView)
-        binding.root.onClickSafely {}
+        bindView()
         requireActivity().setupOnBackPressedCallback {
             val currentPage = requireActivity().getPreviousFragment()
             if (currentPage is ViewSessionPage) {
@@ -25,5 +25,14 @@ class ViewSessionDetailPage : PageFragment() {
                 currentPage.refresh()
             }
         }
+        controller.loadSessionOverviewInfo()
+    }
+
+    private fun bindView() {
+        binding.root.onClickSafely {}
+        binding.countStudentInfo.mainTitle.text = "Student"
+        binding.countStudentInfo.subTitle.text = "3"
+        binding.subjectInfo.mainTitle.text = "Course"
+        binding.subjectInfo.subTitle.text = ""
     }
 }

@@ -1,17 +1,52 @@
 package com.atc.team10.attendancetracking.utils
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 
 object AppExt {
+    private var toast: Toast? = null
+    fun Context.showShortToast(message: String) {
+        toast?.cancel()
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        toast?.show()
+    }
+
+    fun Context.showLongToast(message: Int) {
+        toast?.cancel()
+        toast = Toast.makeText(this, message, Toast.LENGTH_LONG)
+        toast?.show()
+    }
+
+    fun Context.isConnectionAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = connectivityManager.activeNetworkInfo
+        val hasConnection = netInfo != null && netInfo.isConnected
+        if (!hasConnection) {
+            showShortToast("Connection is not available.")
+        }
+        return hasConnection
+    }
+
+    fun Context.isCameraPermisionGranted(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     fun FragmentActivity.getTopFragment(): Fragment? {
         val size = supportFragmentManager.fragments.size
         if (size > 0) {

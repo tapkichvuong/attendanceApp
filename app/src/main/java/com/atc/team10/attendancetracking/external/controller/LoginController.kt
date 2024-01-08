@@ -24,6 +24,8 @@ class LoginController : AbsController() {
                 val response = ApiHelper.apiService.login(loginRequest)
                 if (response.isSuccessful) {
                     val userResponse = response.body()
+                    ApiHelper.authToken = userResponse!!.token
+                    ApiHelper.createRetrofit()
                     val decodeJwt = AppUtils.decodeJwtToken(userResponse!!.token)
                     withContext(Dispatchers.Main) {
                         isLoading.updateValue(false)

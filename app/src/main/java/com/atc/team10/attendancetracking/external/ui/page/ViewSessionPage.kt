@@ -1,17 +1,26 @@
 package com.atc.team10.attendancetracking.external.ui.page
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.databinding.PageViewSessionBinding
 import com.atc.team10.attendancetracking.external.controller.ViewSessionController
 import com.atc.team10.attendancetracking.external.ui.adapter.ListSessionAdapter
-import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
+import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilder
+import com.atc.team10.attendancetracking.utils.AppConstant
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
+import com.atc.team10.attendancetracking.utils.AppConstant.RequestKey.REQUEST_PERMISSION_CAMERA
 import com.atc.team10.attendancetracking.utils.AppExt.gone
+import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermisionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.AppExt.visible
@@ -36,14 +45,7 @@ class ViewSessionPage : PageFragment() {
         // get list session by role and update
         listSessionAdapter = ListSessionAdapter().apply {
             setOnItemClickListener { _, _, position ->
-                val id = getItem(position).id
-                val targetPage = if (controller.userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
-                targetPage.apply {
-                    arguments = Bundle().apply {
-                        putLong(SESSION_ID, id)
-                    }
-                }
-                PageUtils.addFragment(requireActivity(), targetPage, false)
+                handleClickSession(position)
             }
         }
         binding.rvCourse.adapter = listSessionAdapter
@@ -73,5 +75,55 @@ class ViewSessionPage : PageFragment() {
                 listSessionAdapter.setNewInstance(it.toMutableList())
             }
         }
+    }
+
+    private fun handleClickSession(position: Int) {
+        if (requireContext().isCameraPermisionGranted()) {
+            val id = listSessionAdapter.getItem(position).id
+            val targetPage =
+                if (controller.userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
+            targetPage.apply {
+                arguments = Bundle().apply {
+                    putLong(AppConstant.BundleKey.SESSION_ID, id)
+                }
+            }
+            PageUtils.addFragment(requireActivity(), targetPage, false)
+        } else {
+            // request camera permision
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_PERMISSION_CAMERA
+            )
+        }
+    }
+
+    private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { grant ->
+            if (grant) {
+                // do nothing
+                // student must click join session again
+            } else {
+                val isGoToSetting = !ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
+                showRequestPermissionCameraDialog(isGoToSetting)
+            }
+        }
+
+    private fun showRequestPermissionCameraDialog(isGoToSetting: Boolean) {
+        val message = "You need to allow for camera permission before joining to session!"
+        DialogQuestionBuilder(requireContext())
+            .setMessage(message)
+            .setPositiveButton("Open Setting") {
+                if (isGoToSetting) {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:${requireContext().packageName}")
+                    startActivity(intent)
+                } else {
+                    requestCameraLauncher.launch(Manifest.permission.CAMERA)
+                }
+            }.build()
+            .show()
     }
 }
