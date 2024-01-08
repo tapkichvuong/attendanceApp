@@ -1,9 +1,11 @@
 package com.atc.team10.attendancetracking.external.ui.page
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import androidx.core.util.Pair
 import androidx.fragment.app.viewModels
@@ -18,6 +20,7 @@ import com.atc.team10.attendancetracking.utils.AppExt.invisible
 import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
 import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
+import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.AppExt.visible
 import com.atc.team10.attendancetracking.utils.PageUtils
 import com.atc.team10.attendancetracking.utils.PrefUtils
@@ -32,6 +35,9 @@ class LoginPage: PageFragment() {
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageLoginBinding.bind(rootView)
         bindView()
+        requireActivity().setupOnBackPressedCallback {
+            requireActivity().finish()
+        }
         observeLogin()
     }
 
@@ -111,6 +117,11 @@ class LoginPage: PageFragment() {
         } else {
             binding.tvError.text = error
             binding.tvError.visible()
+            val shakeAnimation = ObjectAnimator.ofFloat(binding.tvError, "translationX", 0f, 10f, -10f, 10f, -10f, 5f, -5f, 0f)
+            shakeAnimation.duration = 700 // Duration of the animation in milliseconds
+            shakeAnimation.interpolator = AccelerateDecelerateInterpolator() // Optional: Use a different interpolator for a different effect
+            shakeAnimation.repeatCount = 0 // Repeat the animation infinitely
+            shakeAnimation.start()
         }
     }
 }

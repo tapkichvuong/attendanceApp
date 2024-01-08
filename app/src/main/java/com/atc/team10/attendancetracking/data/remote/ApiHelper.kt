@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 object ApiHelper {
     var authToken = ""
-    private const val TIME_OUT = 10L
+    private const val TIME_OUT = 5L
     private const val BASE_URL =
         "https://9e15-2401-d800-9c07-1e57-88c4-ca38-94f3-ed0.ngrok-free.app/api/v1/"
 

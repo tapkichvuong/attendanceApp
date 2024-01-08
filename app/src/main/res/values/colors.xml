@@ -18,4 +18,5 @@
     <color name="color_text_sub">#7C7C7C</color>
 
     <color name="button_detail">#F5CF04</color>
+    <color name="color_error">#FF3333</color>
 </resources>

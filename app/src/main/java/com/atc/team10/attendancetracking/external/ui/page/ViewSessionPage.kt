@@ -18,7 +18,6 @@ import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilde
 import com.atc.team10.attendancetracking.utils.AppConstant
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
-import com.atc.team10.attendancetracking.utils.AppConstant.RequestKey.REQUEST_PERMISSION_CAMERA
 import com.atc.team10.attendancetracking.utils.AppExt.gone
 import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermisionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
@@ -36,9 +35,18 @@ class ViewSessionPage : PageFragment() {
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageViewSessionBinding.bind(rootView)
-        binding.root.onClickSafely {}
         controller.userCode = arguments?.getString(USER_CODE) ?: ""
         controller.userRole = arguments?.getString(USER_ROLE) ?: ""
+        bindView()
+        initObserver()
+        requireActivity().setupOnBackPressedCallback {
+            requireActivity().finish()
+        }
+        controller.viewStudentSession()
+    }
+
+    private fun bindView() {
+        binding.root.onClickSafely {}
         binding.tvUserCode.text = "Hi, ${controller.userCode}"
         emptyView = layoutInflater.inflate(R.layout.item_empty, null, false)
         emptyView.findViewById<TextView>(R.id.tvEmpty).text = "No active session"
@@ -49,11 +57,9 @@ class ViewSessionPage : PageFragment() {
             }
         }
         binding.rvCourse.adapter = listSessionAdapter
-        initObserver()
-        requireActivity().setupOnBackPressedCallback {
-            requireActivity().finish()
+        binding.swipeRefresh.setOnRefreshListener {
+            controller.viewStudentSession()
         }
-        controller.viewStudentSession()
     }
 
     override fun refresh() {
@@ -65,6 +71,7 @@ class ViewSessionPage : PageFragment() {
             if (it) {
                 binding.loadingView.visible()
             } else {
+                binding.swipeRefresh.isRefreshing = false
                 binding.loadingView.gone()
             }
         }
@@ -79,7 +86,7 @@ class ViewSessionPage : PageFragment() {
 
     private fun handleClickSession(position: Int) {
         if (requireContext().isCameraPermisionGranted()) {
-            val id = listSessionAdapter.getItem(position).id
+            val id = listSessionAdapter.getItem(position).Id
             val targetPage =
                 if (controller.userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
             targetPage.apply {
@@ -90,11 +97,7 @@ class ViewSessionPage : PageFragment() {
             PageUtils.addFragment(requireActivity(), targetPage, false)
         } else {
             // request camera permision
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.CAMERA),
-                REQUEST_PERMISSION_CAMERA
-            )
+            requestCameraLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 

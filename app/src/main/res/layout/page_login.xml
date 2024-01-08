@@ -130,7 +130,7 @@
         android:visibility="invisible"
         android:textStyle="bold"
         android:layout_marginHorizontal="@dimen/_20sdp"
-        android:textColor="@color/color_gradient_start"
+        android:textColor="@color/color_error"
         android:textSize="@dimen/_12ssp"
         android:gravity="center" />
 

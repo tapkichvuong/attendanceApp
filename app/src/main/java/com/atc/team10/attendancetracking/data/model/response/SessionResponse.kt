@@ -1,12 +1,10 @@
 package com.atc.team10.attendancetracking.data.model.response
 
-import java.time.LocalDateTime
-
 data class SessionResponse(
-    val id: Long,
-//    val lessonName: String,
-//    val subjectName: String,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
-    val isActive: Boolean
+    val Id: Long,
+    val timeStart: String,
+    val timeEnd: String,
+    val isActive: Boolean,
+    val lessonName: String,
+    val subjectName: String
 )
