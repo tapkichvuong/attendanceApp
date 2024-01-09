@@ -22,12 +22,14 @@ import com.atc.team10.attendancetracking.utils.AppConstant
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.LESSON_NAME
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SUBJECT_NAME
+import com.atc.team10.attendancetracking.utils.AppConstant.DOUBLE_BACK_PRESSED_INTERVAL
 import com.atc.team10.attendancetracking.utils.AppExt.gone
 import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermissionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
 import com.atc.team10.attendancetracking.utils.AppExt.isLocationPermissionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
+import com.atc.team10.attendancetracking.utils.AppExt.showShortToast
 import com.atc.team10.attendancetracking.utils.AppExt.visible
 import com.atc.team10.attendancetracking.utils.PageUtils
 import com.atc.team10.attendancetracking.utils.PrefUtils
@@ -53,7 +55,13 @@ class ViewSessionPage : PageFragment() {
         bindView()
         initObserver()
         onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
-            requireActivity().finish()
+            if (System.currentTimeMillis() - backPressedTime < DOUBLE_BACK_PRESSED_INTERVAL) {
+                // If the time difference between two back presses is less than the interval, exit the app
+                requireActivity().finish()
+            } else {
+                requireContext().showShortToast("Press back again to exit")
+                backPressedTime = System.currentTimeMillis()
+            }
         }
         if (requireContext().isConnectionAvailable()) {
             if (userRole == "STUDENT" && requireContext().isLocationPermissionGranted()) {

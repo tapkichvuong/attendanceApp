@@ -11,6 +11,7 @@ import com.atc.team10.attendancetracking.external.ui.dialog.LoadingDialog
 abstract class PageFragment : Fragment() {
     abstract val controller: AbsController
     private var loadingDialog: LoadingDialog? = null
+    protected open var backPressedTime: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,

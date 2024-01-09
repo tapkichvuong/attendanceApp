@@ -1,9 +1,7 @@
 package com.atc.team10.attendancetracking.utils
 
 object AppConstant {
-    object RequestKey {
-        const val REQUEST_LOCATION_PERMISSION = 1001
-    }
+    const val DOUBLE_BACK_PRESSED_INTERVAL = 2000L
 
     object BundleKey {
         const val USER_CODE = "user_code"
