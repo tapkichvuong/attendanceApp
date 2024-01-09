@@ -19,6 +19,7 @@ import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.PageUtils
+import kotlinx.coroutines.Job
 
 class ViewSessionDetailPage : PageFragment() {
     override val controller by viewModels<ViewSessionDetailController>()
@@ -29,6 +30,7 @@ class ViewSessionDetailPage : PageFragment() {
     var sessionId: Long = -1L
     var lessonName: String = ""
     var subjectName: String = ""
+    private var loadAbsentStudentJob: Job? = null
 
     override fun getLayoutId() = R.layout.page_view_session_detail
 
@@ -50,6 +52,7 @@ class ViewSessionDetailPage : PageFragment() {
             onBackPressedCallback.handleOnBackPressed()
         }
         controller.getTotalStudent(sessionId)
+        controller.checkStatusOfSession(sessionId)
     }
 
     private fun bindView() {
@@ -75,20 +78,24 @@ class ViewSessionDetailPage : PageFragment() {
     }
 
     private fun initObserver() {
-        controller.isActive.observe(viewLifecycleOwner) {
-            if (it == true) {
-                with(binding.btnAttendance) {
-                    background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_attendance_stop)
-                    text = "Stop attendance"
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                }
-                controller.loadListAbsentStudent(sessionId)
+        controller.isOnlyCheckStatus.observe(viewLifecycleOwner) {
+            if (it) {
+                setButtonCheckingStatus()
+                loadAbsentStudentJob?.cancel()
+                loadAbsentStudentJob = controller.loadListAbsentStudent(sessionId, it)
             } else {
-                with(binding.btnAttendance) {
-                    background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_attendance_checking)
-                    text = "Attendance"
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color))
-                }
+                setButtonIdleStatus()
+                loadAbsentStudentJob?.cancel()
+            }
+        }
+        controller.isActive.observe(viewLifecycleOwner) {
+            if (it) {
+                setButtonCheckingStatus()
+                loadAbsentStudentJob?.cancel()
+                loadAbsentStudentJob = controller.loadListAbsentStudent(sessionId, it)
+            } else {
+                setButtonIdleStatus()
+                loadAbsentStudentJob?.cancel()
             }
         }
         controller.totalStudent.observe(viewLifecycleOwner) {
@@ -108,8 +115,25 @@ class ViewSessionDetailPage : PageFragment() {
         }
     }
 
+    private fun setButtonCheckingStatus() {
+        with(binding.btnAttendance) {
+            background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_attendance_stop)
+            text = "Stop"
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        }
+    }
+
+    private fun setButtonIdleStatus() {
+        with(binding.btnAttendance) {
+            background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_attendance_checking)
+            text = "Attendance"
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color))
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         onBackPressedCallback.remove()
+        loadAbsentStudentJob?.cancel()
     }
 }

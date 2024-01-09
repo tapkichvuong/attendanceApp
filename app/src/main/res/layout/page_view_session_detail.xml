@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/btnAttendance"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/bg_button_attendance_checking"
@@ -66,22 +66,26 @@
             android:paddingTop="@dimen/_8sdp"
             android:paddingBottom="@dimen/_9sdp"
             android:text="Attendance"
+            android:layout_marginStart="@dimen/_25sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_13ssp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/btnHistory"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/bg_button_attendance_checking"
             android:fontFamily="@font/font_medium"
             android:gravity="center"
+            android:layout_marginEnd="@dimen/_25sdp"
             android:layout_marginStart="@dimen/_10sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:paddingHorizontal="@dimen/_15sdp"
             android:paddingTop="@dimen/_8sdp"
             android:paddingBottom="@dimen/_9sdp"

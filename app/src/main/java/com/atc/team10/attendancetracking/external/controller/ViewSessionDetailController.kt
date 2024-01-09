@@ -8,6 +8,8 @@ import com.atc.team10.attendancetracking.data.remote.ApiHelper
 import com.atc.team10.attendancetracking.utils.AppExt
 import com.atc.team10.attendancetracking.utils.AppExt.updateValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -16,6 +18,7 @@ import kotlinx.coroutines.withContext
  */
 
 class ViewSessionDetailController : AbsController() {
+    var isOnlyCheckStatus = MutableLiveData<Boolean>()
     var isActive = MutableLiveData<Boolean>()
     var totalStudent = MutableLiveData<TotalStudentResponse?>()
     var listAbsentStudent = MutableLiveData<AbsentResponse?>()
@@ -45,26 +48,35 @@ class ViewSessionDetailController : AbsController() {
         }
     }
 
-    fun loadListAbsentStudent(sessionId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = ApiHelper.apiService.getHistoryOfAbsentStudents(sessionId)
-                if (response.isSuccessful) {
-                    val absentResponse = response.body()
-                    AppExt.sendLog("loadListAbsentStudent - ${absentResponse?.studentCode?.size}")
-                    withContext(Dispatchers.Main) {
-                        listAbsentStudent.updateValue(absentResponse)
-                    }
-                } else {
-                    val message = response.message()
-                    withContext(Dispatchers.Main) {
-                        listAbsentStudent.updateValue(AbsentResponse(emptyList()))
-                    }
+    fun loadListAbsentStudent(sessionId: Long, active: Boolean): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            if (active) {
+                while (true) {
+                    delay(1000)
+                    executeLoadListAbsent(sessionId)
                 }
-            } catch (e: Exception) {
-                AppExt.sendLog("loadListAbsentStudent message ${e.message}")
-                listAbsentStudent.updateValue(AbsentResponse(emptyList()))
             }
+        }
+    }
+
+    private suspend fun executeLoadListAbsent(sessionId: Long) {
+        try {
+            val response = ApiHelper.apiService.getHistoryOfAbsentStudents(sessionId)
+            if (response.isSuccessful) {
+                val absentResponse = response.body()
+                AppExt.sendLog("loadListAbsentStudent - ${absentResponse?.studentCode?.size}")
+                withContext(Dispatchers.Main) {
+                    listAbsentStudent.updateValue(absentResponse)
+                }
+            } else {
+                val message = response.message()
+                withContext(Dispatchers.Main) {
+                    listAbsentStudent.updateValue(AbsentResponse(emptyList()))
+                }
+            }
+        } catch (e: Exception) {
+            AppExt.sendLog("loadListAbsentStudent message ${e.message}")
+            listAbsentStudent.updateValue(AbsentResponse(emptyList()))
         }
     }
 
@@ -74,19 +86,21 @@ class ViewSessionDetailController : AbsController() {
                 val response = ApiHelper.apiService.isActiveSession(sessionId)
                 if (response.isSuccessful) {
                     val activeResponse = response.body()
-                    AppExt.sendLog("checkStatusOfSession - status = ${activeResponse?.status}, message = ${activeResponse?.message}")
-                    withContext(Dispatchers.Main) {
-                        isActive.updateValue(activeResponse?.status == 1L)
+                    activeResponse?.let { response ->
+                        AppExt.sendLog("checkStatusOfSession - status = ${response.status}, message = ${response.message}")
+                        withContext(Dispatchers.Main) {
+                            isOnlyCheckStatus.updateValue(response.status)
+                        }
                     }
                 } else {
                     val message = response.message()
                     withContext(Dispatchers.Main) {
-                        isActive.updateValue(false)
+                        isOnlyCheckStatus.updateValue(false)
                     }
                 }
             } catch (e: Exception) {
                 AppExt.sendLog("checkStatusOfSession message ${e.message}")
-                isActive.updateValue(false)
+                isOnlyCheckStatus.updateValue(false)
             }
         }
     }
@@ -97,9 +111,11 @@ class ViewSessionDetailController : AbsController() {
                 val response = ApiHelper.apiService.activeSession(sessionId)
                 if (response.isSuccessful) {
                     val activeResponse = response.body()
-                    AppExt.sendLog("activeSession - status = ${activeResponse?.status}, message = ${activeResponse?.message}")
-                    withContext(Dispatchers.Main) {
-                        isActive.updateValue(activeResponse?.status == 1L)
+                    activeResponse?.let { response ->
+                        AppExt.sendLog("activeSession - status = ${response.status}, message = ${response.message}")
+                        withContext(Dispatchers.Main) {
+                            isActive.updateValue(response.status)
+                        }
                     }
                 } else {
                     val message = response.message()

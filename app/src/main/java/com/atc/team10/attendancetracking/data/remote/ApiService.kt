@@ -34,8 +34,8 @@ interface ApiService {
     @GET("teacher/sessions")
     suspend fun getTeacherSessions(): Response<List<SessionResponse>>
 
-    @GET("teacher/activate")
-    suspend fun activeSession(@Query("sessionId") sessionId: Long): Response<ActiveSessionResponse>
+    @POST("teacher/activate")
+    suspend fun activeSession(@Query("id") sessionId: Long): Response<ActiveSessionResponse>
 
     @GET("teacher/check-active-session")
     suspend fun isActiveSession(@Query("sessionId") sessionId: Long): Response<ActiveSessionResponse>
