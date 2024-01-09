@@ -44,9 +44,9 @@
         android:paddingHorizontal="@dimen/_15sdp"
         android:paddingTop="@dimen/_8sdp"
         android:paddingBottom="@dimen/_9sdp"
-        android:text="Take a picture to attend your course"
+        android:text="Take a picture to join the class session"
         android:textColor="@color/white"
-        android:textSize="@dimen/_13ssp"
+        android:textSize="@dimen/_12ssp"
         android:textStyle="bold" />
 
     <ImageView

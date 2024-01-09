@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.atc.team10.attendancetracking.external.controller.AbsController
+import com.atc.team10.attendancetracking.external.ui.dialog.LoadingDialog
 
 abstract class PageFragment : Fragment() {
     abstract val controller: AbsController
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +29,15 @@ abstract class PageFragment : Fragment() {
     open fun refresh(){
     }
 
-    open fun onBackPressed(): Boolean{
-        return true
+    protected open fun showDialogLoading(isShow: Boolean, loadingText: String) {
+        if (loadingDialog == null) {
+            loadingDialog = LoadingDialog(requireContext())
+        }
+        if (isShow) {
+            loadingDialog!!.setTextLoading(loadingText)
+            if (!loadingDialog!!.isShowing) loadingDialog!!.show()
+        } else {
+            if (loadingDialog!!.isShowing) loadingDialog!!.dismiss()
+        }
     }
 }

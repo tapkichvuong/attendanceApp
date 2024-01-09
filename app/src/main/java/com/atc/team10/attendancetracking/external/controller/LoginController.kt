@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginController : AbsController() {
-    var isLoading = MutableLiveData(false)
+    var isLoading = MutableLiveData<Boolean>()
     var notifyError = MutableLiveData("")
     var loginResult = MutableLiveData<Pair<String, String>>()
 
@@ -24,13 +24,22 @@ class LoginController : AbsController() {
                 val response = ApiHelper.apiService.login(loginRequest)
                 if (response.isSuccessful) {
                     val userResponse = response.body()
-                    ApiHelper.authToken = userResponse!!.token
-                    ApiHelper.createRetrofit()
-                    val decodeJwt = AppUtils.decodeJwtToken(userResponse!!.token)
-                    withContext(Dispatchers.Main) {
-                        isLoading.updateValue(false)
-                        notifyError.updateValue("")
-                        loginResult.updateValue(decodeJwt)
+                    userResponse?.let { response ->
+                        if (response.token != null) {
+                            ApiHelper.authToken = response.token
+                            ApiHelper.createRetrofit()
+                            val decodeJwt = AppUtils.decodeJwtToken(response.token)
+                            withContext(Dispatchers.Main) {
+                                isLoading.updateValue(false)
+                                notifyError.updateValue("")
+                                loginResult.updateValue(decodeJwt)
+                            }
+                        } else {
+                            val message = userResponse?.message ?: ""
+                            withContext(Dispatchers.Main) {
+                                notifyError.updateValue(message)
+                            }
+                        }
                     }
                 } else {
                     val message = response.message()
@@ -39,7 +48,7 @@ class LoginController : AbsController() {
                         /** for test */
 //                        isLoading.updateValue(false)
 //                        notifyError.updateValue("")
-//                        loginResult.updateValue(Pair("20155398", "student"))
+//                        loginResult.updateValue(FakeDataSource.getStudentLoginInfo())
                     }
                 }
             } catch (e: Exception) {

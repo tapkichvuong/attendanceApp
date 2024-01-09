@@ -23,6 +23,7 @@ import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.gone
 import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermisionGranted
+import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.AppExt.visible
@@ -48,7 +49,9 @@ class ViewSessionPage : PageFragment() {
         onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
             requireActivity().finish()
         }
-        controller.viewStudentSession(userRole)
+        if (requireContext().isConnectionAvailable()) {
+            controller.viewStudentSession(userRole)
+        }
     }
 
     private fun bindView() {
@@ -64,12 +67,16 @@ class ViewSessionPage : PageFragment() {
         }
         binding.rvCourse.adapter = listSessionAdapter
         binding.swipeRefresh.setOnRefreshListener {
-            controller.viewStudentSession(userRole)
+            if (requireContext().isConnectionAvailable()) {
+                controller.viewStudentSession(userRole)
+            }
         }
     }
 
     override fun refresh() {
-        controller.viewStudentSession(userRole)
+        if (requireContext().isConnectionAvailable()) {
+            controller.viewStudentSession(userRole)
+        }
     }
 
     private fun initObserver() {
@@ -96,7 +103,7 @@ class ViewSessionPage : PageFragment() {
             val targetPage = if (userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
             targetPage.apply {
                 arguments = Bundle().apply {
-                    putLong(SESSION_ID, session.Id)
+                    putLong(SESSION_ID, session.id)
                     putString(LESSON_NAME, session.lessonName)
                     putString(SUBJECT_NAME, session.subjectName)
                 }

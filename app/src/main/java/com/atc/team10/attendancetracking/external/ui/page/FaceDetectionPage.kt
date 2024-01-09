@@ -18,8 +18,8 @@ import androidx.fragment.app.viewModels
 import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.databinding.PageFaceDetectionBinding
 import com.atc.team10.attendancetracking.external.controller.FaceDetectionController
-import com.atc.team10.attendancetracking.external.ui.dialog.LoadingDialog
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
+import com.atc.team10.attendancetracking.utils.AppExt.bytesToKB
 import com.atc.team10.attendancetracking.utils.AppExt.disable
 import com.atc.team10.attendancetracking.utils.AppExt.enable
 import com.atc.team10.attendancetracking.utils.AppExt.getPreviousFragment
@@ -27,6 +27,7 @@ import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.sendLog
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
+import com.atc.team10.attendancetracking.utils.AppExt.showShortToast
 import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
 import java.util.concurrent.ExecutionException
@@ -35,7 +36,6 @@ import java.util.concurrent.ExecutionException
 class FaceDetectionPage : PageFragment() {
     override val controller by viewModels<FaceDetectionController>()
     private lateinit var binding: PageFaceDetectionBinding
-    private var loadingDialog: LoadingDialog? = null
     private var camera: Camera? = null
     private var imageCapture: ImageCapture? = null
     private lateinit var mediaPlayer: MediaPlayer
@@ -65,10 +65,24 @@ class FaceDetectionPage : PageFragment() {
 
     private fun initObserver() {
         controller.isLoading.observe(viewLifecycleOwner) {
-            showDialogLoading(it)
+            showDialogLoading(it, "Verifying...")
         }
+        /**
+         * finish if success in here
+         * otherwise, must have another image
+         */
         controller.isJoined.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Is Join: $it", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(requireContext(), "Is Join: $it", Toast.LENGTH_SHORT).show()
+            if (controller.isFirstObserver) {
+                controller.isFirstObserver = false
+            } else {
+                if (it) {
+                    requireContext().showShortToast("Checked in successfully.")
+                    onBackPressedCallback.handleOnBackPressed()
+                } else {
+                    requireContext().showShortToast("Verification failed, please try again.")
+                }
+            }
         }
     }
 
@@ -110,13 +124,12 @@ class FaceDetectionPage : PageFragment() {
         // Create a file to save the image
         // Create a file to save the image
         val outputDirectory = requireContext().externalCacheDir
-        val photoFile = File(outputDirectory, System.currentTimeMillis().toString() + ".jpg")
+        var photoFile = File(outputDirectory, System.currentTimeMillis().toString() + ".jpg")
 
         // Configure the output options for the ImageCapture use case
 
         // Configure the output options for the ImageCapture use case
         val outputFileOptions = OutputFileOptions.Builder(photoFile).build()
-
         imageCapture?.takePicture(
             outputFileOptions,
             ContextCompat.getMainExecutor(requireContext()),
@@ -126,9 +139,10 @@ class FaceDetectionPage : PageFragment() {
                     // You can display the captured image or perform further actions here
                     playShutterSound()
                     sendLog("face detection - picture saved")
+
                     controller.imageFile = photoFile
                     controller.joinSession()
-                    sendLog("face detection size: ${photoFile.length()}")
+                    sendLog("face detection size: ${photoFile.length().bytesToKB()}KB")
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -144,18 +158,6 @@ class FaceDetectionPage : PageFragment() {
             mediaPlayer.start()
         } else {
             mediaPlayer.stop()
-        }
-    }
-
-    private fun showDialogLoading(isShow: Boolean) {
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(requireContext())
-        }
-        if (isShow) {
-            loadingDialog!!.setTextLoading("Attending...")
-            if (!loadingDialog!!.isShowing) loadingDialog!!.show()
-        } else {
-            if (loadingDialog!!.isShowing) loadingDialog!!.dismiss()
         }
     }
 

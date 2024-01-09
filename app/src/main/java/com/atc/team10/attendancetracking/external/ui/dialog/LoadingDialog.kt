@@ -7,7 +7,7 @@ import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.databinding.DialogLoadingBinding
 
 class LoadingDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
-    val binding: DialogLoadingBinding
+    private val binding: DialogLoadingBinding
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)

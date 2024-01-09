@@ -9,7 +9,7 @@ object ApiHelper {
     var authToken = ""
     private const val TIME_OUT = 5L
     private const val BASE_URL =
-        "https://9e15-2401-d800-9c07-1e57-88c4-ca38-94f3-ed0.ngrok-free.app/api/v1/"
+        "https://de90-2401-d800-beb9-3b7b-b025-22de-9add-9d38.ngrok-free.app/api/v1/"
 
     private var retrofit: Retrofit = createRetrofit()
 

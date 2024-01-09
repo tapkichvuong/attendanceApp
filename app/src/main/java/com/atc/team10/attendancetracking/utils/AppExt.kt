@@ -18,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 
 object AppExt {
     private var toast: Toast? = null
+
     fun Context.showShortToast(message: String) {
         toast?.cancel()
         toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
@@ -35,7 +36,7 @@ object AppExt {
         val netInfo = connectivityManager.activeNetworkInfo
         val hasConnection = netInfo != null && netInfo.isConnected
         if (!hasConnection) {
-            showShortToast("Connection is not available.")
+            showShortToast("Network unavailable.")
         }
         return hasConnection
     }
@@ -170,5 +171,9 @@ object AppExt {
 
     fun sendLog(log: String) {
         Log.d("duc.nh3", log)
+    }
+
+    fun Long.bytesToKB(): Long {
+        return this / 1024
     }
 }

@@ -54,7 +54,7 @@
             android:layout_marginTop="@dimen/_15sdp"
             android:fontFamily="@font/font_medium"
             android:gravity="start"
-            android:text="Course List"
+            android:text="Session List"
             android:textColor="@color/black"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold" />

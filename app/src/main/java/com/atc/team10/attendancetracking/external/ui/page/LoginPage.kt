@@ -14,7 +14,6 @@ import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.data.model.request.LoginRequest
 import com.atc.team10.attendancetracking.databinding.PageLoginBinding
 import com.atc.team10.attendancetracking.external.controller.LoginController
-import com.atc.team10.attendancetracking.external.ui.dialog.LoadingDialog
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.invisible
@@ -29,7 +28,6 @@ import com.atc.team10.attendancetracking.utils.PrefUtils
 class LoginPage: PageFragment() {
     override val controller by viewModels<LoginController>()
     private lateinit var binding: PageLoginBinding
-    private var loadingDialog: LoadingDialog? = null
     private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     override fun getLayoutId(): Int = R.layout.page_login
@@ -82,7 +80,7 @@ class LoginPage: PageFragment() {
 
     private fun observeLogin() {
         controller.isLoading.observe(viewLifecycleOwner) {
-            showDialogLoading(it)
+            showDialogLoading(it, "Logging in...")
         }
         controller.notifyError.observe(viewLifecycleOwner) {
             showLoginError(it)
@@ -99,18 +97,6 @@ class LoginPage: PageFragment() {
             putString(USER_ROLE, info.second)
         }
         PageUtils.addFragment(requireActivity(), viewSessionPage, true)
-    }
-
-    private fun showDialogLoading(isShow: Boolean) {
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(requireContext())
-        }
-        if (isShow) {
-            loadingDialog!!.setTextLoading("Logging in...")
-            if (!loadingDialog!!.isShowing) loadingDialog!!.show()
-        } else {
-            if (loadingDialog!!.isShowing) loadingDialog!!.dismiss()
-        }
     }
 
     private fun showLoginError(error: String) {

@@ -1,121 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/black" />
 
     <TextView
         android:id="@+id/lessonName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ivBack"
+        android:layout_centerHorizontal="true"
         android:fontFamily="@font/font_bold"
         android:gravity="center_horizontal"
         android:text="Mathematics"
         android:textColor="@color/text_color"
         android:textSize="@dimen/_18ssp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivBack" />
+        android:textStyle="bold" />
 
     <include
         android:id="@+id/countStudentInfo"
         layout="@layout/item_course_detail_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/lessonName"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lessonName" />
+        android:layout_marginEnd="@dimen/_10sdp" />
 
-    <TextView
-        android:id="@+id/btnAttendance"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_gravity="center_horizontal"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clButtonAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/countStudentInfo"
+        android:layout_marginTop="@dimen/_20sdp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/btnAttendance"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_button_attendance_checking"
+            android:fontFamily="@font/font_medium"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_9sdp"
+            android:text="Attendance"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btnHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_button_attendance_checking"
+            android:fontFamily="@font/font_medium"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_9sdp"
+            android:text="History"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/llAbsent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_20sdp"
-        android:background="@drawable/bg_button_course_detail"
-        android:fontFamily="@font/font_medium"
-        android:gravity="center"
-        android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnHistory"
-        app:layout_constraintTop_toBottomOf="@id/countStudentInfo"
-        android:paddingHorizontal="@dimen/_15sdp"
-        android:paddingTop="@dimen/_8sdp"
-        android:paddingBottom="@dimen/_9sdp"
-        android:text="Attendance"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/_13ssp" />
+        android:background="@drawable/bg_list_course"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:layout_below="@id/clButtonAction">
 
-    <TextView
-        android:id="@+id/btnHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        android:background="@drawable/bg_button_course_detail"
-        android:fontFamily="@font/font_medium"
-        android:gravity="center"
-        app:layout_constraintStart_toEndOf="@id/btnAttendance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countStudentInfo"
-        android:paddingHorizontal="@dimen/_15sdp"
-        android:paddingTop="@dimen/_8sdp"
-        android:paddingBottom="@dimen/_9sdp"
-        android:text="History"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/_13ssp" />
-
-
-        <LinearLayout
-            android:id="@+id/llAbsent"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/btnAttendance"
-            android:background="@drawable/bg_list_course"
-            android:paddingHorizontal="@dimen/_12sdp"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/_15sdp"
+            android:fontFamily="@font/font_medium"
+            android:gravity="start"
+            android:text="Absentee List"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:text="Student List"
-                android:gravity="start"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp"
-                android:textStyle="bold"
-                android:fontFamily="@font/font_medium" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAbsent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/color_background_app"
-                android:overScrollMode="never"
-                android:paddingHorizontal="@dimen/_1sdp"
-                android:visibility="visible"
-                android:layout_marginTop="@dimen/_16sdp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_student" />
-        </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAbsent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:overScrollMode="never"
+            android:paddingHorizontal="@dimen/_1sdp"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_student" />
+    </LinearLayout>
+</RelativeLayout>

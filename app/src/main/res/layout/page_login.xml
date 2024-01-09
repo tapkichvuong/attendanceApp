@@ -91,7 +91,7 @@
         android:id="@+id/cbRememberPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember login info"
+        android:text="Remember login information"
         android:textSize="@dimen/_12sdp"
         android:buttonTint="@color/color_theme_app"
         android:textColor="@color/black"
