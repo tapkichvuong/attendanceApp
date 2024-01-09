@@ -72,13 +72,14 @@ object AppExt {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
-    fun FragmentActivity.setupOnBackPressedCallback(onBackPressedAction: () -> Unit) {
+    fun FragmentActivity.setupOnBackPressedCallback(onBackPressedAction: () -> Unit): OnBackPressedCallback {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBackPressedAction.invoke()
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        return onBackPressedCallback
     }
 
 

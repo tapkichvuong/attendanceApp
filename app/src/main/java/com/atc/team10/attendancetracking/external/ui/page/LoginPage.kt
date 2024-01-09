@@ -7,6 +7,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.core.util.Pair
 import androidx.fragment.app.viewModels
 import com.atc.team10.attendancetracking.R
@@ -29,13 +30,14 @@ class LoginPage: PageFragment() {
     override val controller by viewModels<LoginController>()
     private lateinit var binding: PageLoginBinding
     private var loadingDialog: LoadingDialog? = null
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     override fun getLayoutId(): Int = R.layout.page_login
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageLoginBinding.bind(rootView)
         bindView()
-        requireActivity().setupOnBackPressedCallback {
+        onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
             requireActivity().finish()
         }
         observeLogin()
@@ -123,5 +125,10 @@ class LoginPage: PageFragment() {
             shakeAnimation.repeatCount = 0 // Repeat the animation infinitely
             shakeAnimation.start()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        onBackPressedCallback.remove()
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_input_edit_text">
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/ivBack"
@@ -21,9 +21,8 @@
         android:id="@+id/titleHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
         android:fontFamily="@font/font_bold"
-        android:gravity="start"
+        android:gravity="center_horizontal"
         android:text="History Of Absence"
         android:textColor="@color/text_color"
         android:textSize="@dimen/_18ssp"

@@ -12,11 +12,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AbsentHistoryController : AbsController() {
-    var sessionId: Long = -1L
     var isLoading = MutableLiveData(false)
     var absentResponse = MutableLiveData<AbsentResponse>()
 
-    fun loadHistoryAbsent() {
+    fun loadHistoryAbsent(sessionId: Long) {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {

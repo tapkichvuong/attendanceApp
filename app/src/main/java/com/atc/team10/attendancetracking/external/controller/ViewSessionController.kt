@@ -12,12 +12,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ViewSessionController : AbsController() {
-    var userCode = ""
-    var userRole = ""
     var isLoading = MutableLiveData(false)
     var listSession = MutableLiveData<List<SessionResponse>>()
 
-    fun viewStudentSession() {
+    fun viewStudentSession(userRole: String) {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {

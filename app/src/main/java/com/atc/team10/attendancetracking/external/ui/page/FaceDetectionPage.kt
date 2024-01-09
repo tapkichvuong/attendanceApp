@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -38,6 +39,7 @@ class FaceDetectionPage : PageFragment() {
     private var camera: Camera? = null
     private var imageCapture: ImageCapture? = null
     private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     override fun getLayoutId() = R.layout.page_face_detection
     override fun initView(rootView: View, isRestore: Boolean) {
@@ -48,12 +50,15 @@ class FaceDetectionPage : PageFragment() {
         binding.btnAttendance.onClick {
             takePicture()
         }
-        requireActivity().setupOnBackPressedCallback {
+        onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
             val currentPage = requireActivity().getPreviousFragment()
             if (currentPage is ViewSessionPage) {
                 requireActivity().supportFragmentManager.popBackStack()
                 currentPage.refresh()
             }
+        }
+        binding.ivBack.onClick {
+            onBackPressedCallback.handleOnBackPressed()
         }
         initObserver()
     }
@@ -157,5 +162,6 @@ class FaceDetectionPage : PageFragment() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        onBackPressedCallback.remove()
     }
 }

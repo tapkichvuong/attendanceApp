@@ -21,9 +21,8 @@
         android:id="@+id/lessonName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
         android:fontFamily="@font/font_bold"
-        android:gravity="start"
+        android:gravity="center_horizontal"
         android:text="Mathematics"
         android:textColor="@color/text_color"
         android:textSize="@dimen/_18ssp"
@@ -39,20 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintEnd_toStartOf="@id/subjectInfo"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lessonName" />
-
-    <include
-        android:id="@+id/subjectInfo"
-        layout="@layout/item_course_detail_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/countStudentInfo"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lessonName" />
 
     <TextView
@@ -89,7 +76,7 @@
         android:gravity="center"
         app:layout_constraintStart_toEndOf="@id/btnAttendance"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subjectInfo"
+        app:layout_constraintTop_toBottomOf="@id/countStudentInfo"
         android:paddingHorizontal="@dimen/_15sdp"
         android:paddingTop="@dimen/_8sdp"
         android:paddingBottom="@dimen/_9sdp"
@@ -99,7 +86,7 @@
 
 
         <LinearLayout
-            android:id="@+id/llCourse"
+            android:id="@+id/llAbsent"
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_height="wrap_content"
@@ -120,7 +107,7 @@
                 android:fontFamily="@font/font_medium" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCourse"
+                android:id="@+id/rvAbsent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/color_background_app"

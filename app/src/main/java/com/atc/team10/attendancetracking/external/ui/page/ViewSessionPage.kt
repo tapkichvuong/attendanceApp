@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
@@ -15,7 +16,9 @@ import com.atc.team10.attendancetracking.databinding.PageViewSessionBinding
 import com.atc.team10.attendancetracking.external.controller.ViewSessionController
 import com.atc.team10.attendancetracking.external.ui.adapter.ListSessionAdapter
 import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilder
-import com.atc.team10.attendancetracking.utils.AppConstant
+import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.LESSON_NAME
+import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
+import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SUBJECT_NAME
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.gone
@@ -30,24 +33,27 @@ class ViewSessionPage : PageFragment() {
     private lateinit var binding: PageViewSessionBinding
     private lateinit var listSessionAdapter: ListSessionAdapter
     private lateinit var emptyView: View
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    var userCode = ""
+    var userRole = ""
 
     override fun getLayoutId() = R.layout.page_view_session
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageViewSessionBinding.bind(rootView)
-        controller.userCode = arguments?.getString(USER_CODE) ?: ""
-        controller.userRole = arguments?.getString(USER_ROLE) ?: ""
+        userCode = arguments?.getString(USER_CODE) ?: ""
+        userRole = arguments?.getString(USER_ROLE) ?: ""
         bindView()
         initObserver()
-        requireActivity().setupOnBackPressedCallback {
+        onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
             requireActivity().finish()
         }
-        controller.viewStudentSession()
+        controller.viewStudentSession(userRole)
     }
 
     private fun bindView() {
         binding.root.onClickSafely {}
-        binding.tvUserCode.text = "Hi, ${controller.userCode}"
+        binding.tvUserCode.text = "Hi, $userCode"
         emptyView = layoutInflater.inflate(R.layout.item_empty, null, false)
         emptyView.findViewById<TextView>(R.id.tvEmpty).text = "No active session"
         // get list session by role and update
@@ -58,12 +64,12 @@ class ViewSessionPage : PageFragment() {
         }
         binding.rvCourse.adapter = listSessionAdapter
         binding.swipeRefresh.setOnRefreshListener {
-            controller.viewStudentSession()
+            controller.viewStudentSession(userRole)
         }
     }
 
     override fun refresh() {
-        controller.viewStudentSession()
+        controller.viewStudentSession(userRole)
     }
 
     private fun initObserver() {
@@ -86,12 +92,13 @@ class ViewSessionPage : PageFragment() {
 
     private fun handleClickSession(position: Int) {
         if (requireContext().isCameraPermisionGranted()) {
-            val id = listSessionAdapter.getItem(position).Id
-            val targetPage =
-                if (controller.userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
+            val session = listSessionAdapter.getItem(position)
+            val targetPage = if (userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
             targetPage.apply {
                 arguments = Bundle().apply {
-                    putLong(AppConstant.BundleKey.SESSION_ID, id)
+                    putLong(SESSION_ID, session.Id)
+                    putString(LESSON_NAME, session.lessonName)
+                    putString(SUBJECT_NAME, session.subjectName)
                 }
             }
             PageUtils.addFragment(requireActivity(), targetPage, false)
@@ -128,5 +135,10 @@ class ViewSessionPage : PageFragment() {
                 }
             }.build()
             .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        onBackPressedCallback.remove()
     }
 }
