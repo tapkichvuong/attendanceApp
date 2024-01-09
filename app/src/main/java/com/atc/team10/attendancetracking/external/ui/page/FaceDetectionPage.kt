@@ -22,7 +22,6 @@ import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
 import com.atc.team10.attendancetracking.utils.AppExt.bytesToKB
 import com.atc.team10.attendancetracking.utils.AppExt.disable
 import com.atc.team10.attendancetracking.utils.AppExt.enable
-import com.atc.team10.attendancetracking.utils.AppExt.getPreviousFragment
 import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.sendLog
@@ -51,11 +50,11 @@ class FaceDetectionPage : PageFragment() {
             takePicture()
         }
         onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
-            val currentPage = requireActivity().getPreviousFragment()
-            if (currentPage is ViewSessionPage) {
+//            val currentPage = requireActivity().getPreviousFragment()
+//            if (currentPage is ViewSessionPage) {
                 requireActivity().supportFragmentManager.popBackStack()
-                currentPage.refresh()
-            }
+//                currentPage.refresh()
+//            }
         }
         binding.ivBack.onClick {
             onBackPressedCallback.handleOnBackPressed()
