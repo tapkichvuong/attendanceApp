@@ -23,7 +23,10 @@ interface ApiService {
     suspend fun login(@Body body: LoginRequest): Response<LoginResponse>
 
     @GET("student/sessions")
-    suspend fun getStudentSessions(): Response<List<SessionResponse>>
+    suspend fun getStudentSessions(
+        @Query("longitude") longitude: Double,
+        @Query("latitude") latitude: Double
+    ): Response<List<SessionResponse>>
 
     @POST("student/join-session")
     suspend fun joinSession(@Body body: JoinSessionRequest): Response<Boolean>

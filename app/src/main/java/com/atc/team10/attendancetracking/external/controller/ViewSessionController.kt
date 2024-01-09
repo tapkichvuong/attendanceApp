@@ -15,13 +15,15 @@ class ViewSessionController : AbsController() {
     var isLoading = MutableLiveData(false)
     var listSession = MutableLiveData<List<SessionResponse>>()
 
-    fun viewStudentSession(userRole: String) {
+    fun viewStudentSession(userRole: String, latitude: Double = 0.0, longitude: Double = 0.0) {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
                 val response =
-                    if (userRole == "STUDENT") ApiHelper.apiService.getStudentSessions() else ApiHelper.apiService.getTeacherSessions()
+                    if (userRole == "STUDENT") ApiHelper.apiService.getStudentSessions(
+                        longitude,
+                        latitude
+                    ) else ApiHelper.apiService.getTeacherSessions()
                 if (response.isSuccessful) {
                     val listSessionResponse = response.body()
                     sendLog("viewStudentSession - ${listSessionResponse?.size}")

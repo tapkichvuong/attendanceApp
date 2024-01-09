@@ -2,6 +2,8 @@ package com.atc.team10.attendancetracking.external.ui.page
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -16,18 +18,21 @@ import com.atc.team10.attendancetracking.databinding.PageViewSessionBinding
 import com.atc.team10.attendancetracking.external.controller.ViewSessionController
 import com.atc.team10.attendancetracking.external.ui.adapter.ListSessionAdapter
 import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilder
+import com.atc.team10.attendancetracking.utils.AppConstant
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.LESSON_NAME
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SUBJECT_NAME
-import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
-import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.gone
-import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermisionGranted
+import com.atc.team10.attendancetracking.utils.AppExt.isCameraPermissionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
+import com.atc.team10.attendancetracking.utils.AppExt.isLocationPermissionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
 import com.atc.team10.attendancetracking.utils.AppExt.visible
 import com.atc.team10.attendancetracking.utils.PageUtils
+import com.atc.team10.attendancetracking.utils.PrefUtils
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class ViewSessionPage : PageFragment() {
     override val controller by viewModels<ViewSessionController>()
@@ -35,6 +40,7 @@ class ViewSessionPage : PageFragment() {
     private lateinit var listSessionAdapter: ListSessionAdapter
     private lateinit var emptyView: View
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     var userCode = ""
     var userRole = ""
 
@@ -42,15 +48,48 @@ class ViewSessionPage : PageFragment() {
 
     override fun initView(rootView: View, isRestore: Boolean) {
         binding = PageViewSessionBinding.bind(rootView)
-        userCode = arguments?.getString(USER_CODE) ?: ""
-        userRole = arguments?.getString(USER_ROLE) ?: ""
+        userCode = arguments?.getString(AppConstant.BundleKey.USER_CODE) ?: ""
+        userRole = arguments?.getString(AppConstant.BundleKey.USER_ROLE) ?: ""
         bindView()
         initObserver()
         onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
             requireActivity().finish()
         }
         if (requireContext().isConnectionAvailable()) {
-            controller.viewStudentSession(userRole)
+            if (userRole == "STUDENT" && requireContext().isLocationPermissionGranted()) {
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return
+                }
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            val latitude = it.latitude
+                            val longitude = it.longitude
+                            PrefUtils.latitude = latitude
+                            PrefUtils.longitude = longitude
+                            controller.viewStudentSession(userRole, latitude, longitude)
+                            // Use latitude and longitude as needed
+                            println("Latitude: $latitude, Longitude: $longitude")
+                        }
+                    }
+            } else {
+                controller.viewStudentSession(userRole)
+            }
         }
     }
 
@@ -68,14 +107,14 @@ class ViewSessionPage : PageFragment() {
         binding.rvCourse.adapter = listSessionAdapter
         binding.swipeRefresh.setOnRefreshListener {
             if (requireContext().isConnectionAvailable()) {
-                controller.viewStudentSession(userRole)
+                controller.viewStudentSession(userRole, PrefUtils.latitude, PrefUtils.longitude)
             }
         }
     }
 
     override fun refresh() {
         if (requireContext().isConnectionAvailable()) {
-            controller.viewStudentSession(userRole)
+            controller.viewStudentSession(userRole, PrefUtils.latitude, PrefUtils.longitude)
         }
     }
 
@@ -98,7 +137,7 @@ class ViewSessionPage : PageFragment() {
     }
 
     private fun handleClickSession(position: Int) {
-        if (requireContext().isCameraPermisionGranted()) {
+        if (requireContext().isCameraPermissionGranted()) {
             val session = listSessionAdapter.getItem(position)
             val targetPage = if (userRole == "TEACHER") ViewSessionDetailPage() else FaceDetectionPage()
             targetPage.apply {

@@ -51,4 +51,12 @@ object PrefUtils {
     var userToken: String
         get() = getValue("user_token", "")
         set(value) = setValue("user_token", value)
+
+    var latitude: Double
+        get() = getValue("latitude", 0.0)
+        set(value) = setValue("latitude", value)
+
+    var longitude: Double
+        get() = getValue("longitude", 0.0)
+        set(value) = setValue("longitude", value)
 }

@@ -1,23 +1,31 @@
 package com.atc.team10.attendancetracking.external.ui.page
 
+import android.Manifest
 import android.animation.ObjectAnimator
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.viewModels
 import com.atc.team10.attendancetracking.R
 import com.atc.team10.attendancetracking.data.model.request.LoginRequest
 import com.atc.team10.attendancetracking.databinding.PageLoginBinding
 import com.atc.team10.attendancetracking.external.controller.LoginController
+import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilder
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
 import com.atc.team10.attendancetracking.utils.AppExt.invisible
 import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
+import com.atc.team10.attendancetracking.utils.AppExt.isLocationPermissionGranted
 import com.atc.team10.attendancetracking.utils.AppExt.onClick
 import com.atc.team10.attendancetracking.utils.AppExt.onClickSafely
 import com.atc.team10.attendancetracking.utils.AppExt.setupOnBackPressedCallback
@@ -33,12 +41,46 @@ class LoginPage: PageFragment() {
     override fun getLayoutId(): Int = R.layout.page_login
 
     override fun initView(rootView: View, isRestore: Boolean) {
-        binding = PageLoginBinding.bind(rootView)
-        bindView()
-        onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
-            requireActivity().finish()
+        if (requireContext().isLocationPermissionGranted()) {
+            binding = PageLoginBinding.bind(rootView)
+            bindView()
+            onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
+                requireActivity().finish()
+            }
+            observeLogin()
+        } else {
+            requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-        observeLogin()
+    }
+
+    private val requestLocationLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { grant ->
+        if (grant) {
+            // do nothing
+        } else {
+            val isGoToSetting = !ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            showRequestPermissionLocationDialog(isGoToSetting)
+        }
+    }
+
+    private fun showRequestPermissionLocationDialog(isGoToSetting: Boolean) {
+        val message = "You need to allow for location permission before using this app!"
+        DialogQuestionBuilder(requireContext())
+            .setMessage(message)
+            .setPositiveButton("Open Setting") {
+                if (isGoToSetting) {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:${requireContext().packageName}")
+                    startActivity(intent)
+                } else {
+                    requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }.setNegativeButton("Close") {
+                requireActivity().finish()
+            }.build()
+            .show()
     }
 
     private fun bindView() {

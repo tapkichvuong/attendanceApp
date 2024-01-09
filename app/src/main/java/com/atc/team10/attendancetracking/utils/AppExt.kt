@@ -1,5 +1,6 @@
 package com.atc.team10.attendancetracking.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -41,11 +42,22 @@ object AppExt {
         return hasConnection
     }
 
-    fun Context.isCameraPermisionGranted(): Boolean {
+    fun Context.isCameraPermissionGranted(): Boolean {
         return ActivityCompat.checkSelfPermission(
             this,
             android.Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun Context.isLocationPermissionGranted(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun FragmentActivity.getTopFragment(): Fragment? {
