@@ -21,9 +21,9 @@ import com.atc.team10.attendancetracking.data.model.request.LoginRequest
 import com.atc.team10.attendancetracking.databinding.PageLoginBinding
 import com.atc.team10.attendancetracking.external.controller.LoginController
 import com.atc.team10.attendancetracking.external.ui.dialog.DialogQuestionBuilder
+import com.atc.team10.attendancetracking.utils.AppConstant
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_CODE
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.USER_ROLE
-import com.atc.team10.attendancetracking.utils.AppConstant.DOUBLE_BACK_PRESSED_INTERVAL
 import com.atc.team10.attendancetracking.utils.AppExt.invisible
 import com.atc.team10.attendancetracking.utils.AppExt.isConnectionAvailable
 import com.atc.team10.attendancetracking.utils.AppExt.isLocationPermissionGranted
@@ -43,22 +43,21 @@ class LoginPage: PageFragment() {
     override fun getLayoutId(): Int = R.layout.page_login
 
     override fun initView(rootView: View, isRestore: Boolean) {
-        if (requireContext().isLocationPermissionGranted()) {
-            binding = PageLoginBinding.bind(rootView)
-            bindView()
-            onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
-                if (System.currentTimeMillis() - backPressedTime < DOUBLE_BACK_PRESSED_INTERVAL) {
-                    // If the time difference between two back presses is less than the interval, exit the app
-                    requireActivity().finish()
-                } else {
-                    requireContext().showShortToast("Press back again to exit")
-                    backPressedTime = System.currentTimeMillis()
-                }
+        binding = PageLoginBinding.bind(rootView)
+        bindView()
+        onBackPressedCallback = requireActivity().setupOnBackPressedCallback {
+            if (System.currentTimeMillis() - backPressedTime < AppConstant.DOUBLE_BACK_PRESSED_INTERVAL) {
+                // If the time difference between two back presses is less than the interval, exit the app
+                requireActivity().finish()
+            } else {
+                requireContext().showShortToast("Press back again to exit")
+                backPressedTime = System.currentTimeMillis()
             }
-            observeLogin()
-        } else {
+        }
+        if (!requireContext().isLocationPermissionGranted()) {
             requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
+        observeLogin()
     }
 
     private val requestLocationLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { grant ->

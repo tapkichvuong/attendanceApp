@@ -18,6 +18,8 @@ class ViewSessionController : AbsController() {
         isLoading.updateValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                sendLog("viewStudentSession] role = $userRole")
+                sendLog("viewStudentSession] location: lat = $latitude, lng = $longitude")
                 val response =
                     if (userRole == "STUDENT") ApiHelper.apiService.getStudentSessions(
                         longitude,
