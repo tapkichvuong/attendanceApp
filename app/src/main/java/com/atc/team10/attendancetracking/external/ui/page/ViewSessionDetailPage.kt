@@ -12,6 +12,7 @@ import com.atc.team10.attendancetracking.databinding.PageViewSessionDetailBindin
 import com.atc.team10.attendancetracking.external.controller.ViewSessionDetailController
 import com.atc.team10.attendancetracking.external.ui.adapter.ListAbsentAdapter
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.LESSON_NAME
+import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.LIST_HISTORY_ATTENDED
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SESSION_ID
 import com.atc.team10.attendancetracking.utils.AppConstant.BundleKey.SUBJECT_NAME
 import com.atc.team10.attendancetracking.utils.AppExt.getPreviousFragment
@@ -60,6 +61,10 @@ class ViewSessionDetailPage : PageFragment() {
         binding.btnHistory.onClick {
             val args = Bundle().apply {
                 putLong(SESSION_ID, sessionId)
+
+                // get list student checked in
+                val attendedStudentList = controller.listTotalStudent.minus((controller.listAbsentStudent.value?.studentCode ?: emptyList()).toSet())
+                putStringArrayList(LIST_HISTORY_ATTENDED, ArrayList(attendedStudentList))
             }
             val absentHistoryPage = AbsentHistoryPage().apply {
                 arguments = args

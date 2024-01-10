@@ -9,5 +9,6 @@ object AppConstant {
         const val SESSION_ID = "session_id"
         const val LESSON_NAME = "lesson_name"
         const val SUBJECT_NAME = "subject_name"
+        const val LIST_HISTORY_ATTENDED = "list_history_attended"
     }
 }

@@ -22,6 +22,7 @@ class ViewSessionDetailController : AbsController() {
     var isActive = MutableLiveData<Boolean>()
     var totalStudent = MutableLiveData<TotalStudentResponse?>()
     var listAbsentStudent = MutableLiveData<AbsentResponse?>()
+    var listTotalStudent: List<String> = emptyList()
 
     fun getTotalStudent(sessionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -30,6 +31,7 @@ class ViewSessionDetailController : AbsController() {
                 if (response.isSuccessful) {
                     val studentsResponse = response.body()
                     AppExt.sendLog("getTotalStudent - ${studentsResponse?.countTotalStudent}")
+                    listTotalStudent = studentsResponse?.studentCode ?: emptyList()
                     withContext(Dispatchers.Main) {
                         totalStudent.updateValue(studentsResponse)
                     }

@@ -10,21 +10,21 @@
         android:id="@+id/ivBack"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:src="@drawable/ic_back"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         app:tint="@color/black" />
 
     <TextView
         android:id="@+id/titleHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font_bold"
-        android:gravity="center_horizontal"
         android:layout_below="@id/ivBack"
         android:layout_centerHorizontal="true"
+        android:fontFamily="@font/font_bold"
+        android:gravity="center_horizontal"
         android:text="Attendance History"
         android:textColor="@color/text_color"
         android:textSize="@dimen/_18ssp"
@@ -32,30 +32,24 @@
 
     <FrameLayout
         android:id="@+id/frAbsent"
-        android:layout_below="@id/titleHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/titleHistory"
         android:layout_marginTop="@dimen/_20sdp"
         android:background="@drawable/bg_list_course"
         android:paddingHorizontal="@dimen/_12sdp">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefresh"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAbsent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_background_app"
             android:layout_marginTop="@dimen/_16sdp"
-            android:paddingHorizontal="@dimen/_1sdp">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAbsent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_student" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:paddingHorizontal="@dimen/_1sdp"
+            android:overScrollMode="never"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_student" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loadingView"
